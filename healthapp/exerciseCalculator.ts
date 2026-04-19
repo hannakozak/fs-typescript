@@ -47,5 +47,17 @@ export const calculateExercises = (
 	};
 };
 
-const result = calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2);
+const args = process.argv.slice(2);
+
+if (args.length < 2) {
+	console.log(
+		'Please provide the target and daily exercise hours as arguments.'
+	);
+	process.exit(1);
+}
+
+const [targetArg, ...exerciseArgs] = args;
+const target = Number(targetArg);
+const dailyExercises = exerciseArgs.map(Number);
+const result = calculateExercises(dailyExercises, target);
 console.log(result);
