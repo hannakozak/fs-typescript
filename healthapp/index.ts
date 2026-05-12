@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express from 'express';
 import { calculateBmi } from './bmiCalculator.ts';
 const app = express();
 app.use(express.json());
@@ -27,8 +27,10 @@ app.get('/bmi', (req, res) => {
 });
 
 app.post('/exercises', (req, res) => {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const { daily_exercises, target } = req.body as any;
+	const { daily_exercises, target } = req.body as {
+		daily_exercises: number[];
+		target: number;
+	};
 
 	if (daily_exercises === undefined || target === undefined) {
 		res.status(400).json({ error: 'parameters missing' });
@@ -38,8 +40,7 @@ app.post('/exercises', (req, res) => {
 	if (
 		!Array.isArray(daily_exercises) ||
 		isNaN(Number(target)) ||
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		daily_exercises.some((d: any) => isNaN(Number(d)))
+		daily_exercises.some((d: number) => isNaN(Number(d)))
 	) {
 		res.status(400).json({ error: 'malformatted parameters' });
 		return;
