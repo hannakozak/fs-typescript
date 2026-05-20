@@ -1,13 +1,12 @@
 {
-	"name": "flights",
+	"name": "patientor-backend",
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"tsc": "tsc",
-		"dev": "concurrently \"tsc --watch\" \"node --watch --experimental-transform-types index.ts\"",
-		"start": "node --experimental-transform-types index.ts",
+		"dev": "tsx watch src/index.ts",
+		"start": "tsx src/index.ts",
 		"lint": "eslint ."
 	},
 	"author": "",
@@ -19,6 +18,7 @@
 		"@types/express": "^5.0.6",
 		"concurrently": "^9.2.1",
 		"eslint": "^10.3.0",
+		"tsx": "^4.21.1",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.59.3"
 	},
