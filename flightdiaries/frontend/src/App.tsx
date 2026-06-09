@@ -9,6 +9,7 @@ function App() {
 	const [weather, setWeather] = useState<Weather>('sunny');
 	const [visibility, setVisibility] = useState<Visibility>('great');
 	const [newEntry, setNewEntry] = useState<DiaryEntry[]>([]);
+	const [errorMessage, setErrorMessage] = useState('');
 
 	useEffect(() => {
 		diaryService.getAll().then((diaryEntries) => {
@@ -16,7 +17,7 @@ function App() {
 		});
 	}, []);
 
-	const entryCreation = (event: React.SyntheticEvent) => {
+	const entryCreation = async (event: React.SyntheticEvent) => {
 		event.preventDefault();
 		const newDiary = {
 			date,
@@ -24,10 +25,16 @@ function App() {
 			visibility,
 		};
 
-		diaryService.create(newDiary).then((createdEntry) => {
+		try {
+			const createdEntry = await diaryService.create(newDiary);
 			setDiary(diary.concat(createdEntry));
 			setNewEntry([...newEntry, createdEntry]);
-		});
+		} catch (error) {
+			setErrorMessage('Error creating diary entry');
+			setTimeout(() => {
+				setErrorMessage('');
+			}, 5000);
+		}
 	};
 
 	const visibilityOptions: Visibility[] = ['great', 'good', 'ok', 'poor'];
@@ -50,6 +57,11 @@ function App() {
 						</p>
 					</div>
 				))}
+				{errorMessage && (
+					<div style={{ color: 'red', marginBottom: '1rem' }}>
+						{errorMessage}
+					</div>
+				)}
 				<form onSubmit={entryCreation}>
 					<div>
 						<label>
