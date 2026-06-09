@@ -8,7 +8,6 @@ function App() {
 	const [date, setDate] = useState('');
 	const [weather, setWeather] = useState<Weather>('sunny');
 	const [visibility, setVisibility] = useState<Visibility>('great');
-	const [newEntry, setNewEntry] = useState<DiaryEntry[]>([]);
 	const [errorMessage, setErrorMessage] = useState('');
 
 	useEffect(() => {
@@ -28,7 +27,6 @@ function App() {
 		try {
 			const createdEntry = await diaryService.create(newDiary);
 			setDiary(diary.concat(createdEntry));
-			setNewEntry([...newEntry, createdEntry]);
 		} catch (error) {
 			setErrorMessage('Error creating diary entry');
 			setTimeout(() => {
