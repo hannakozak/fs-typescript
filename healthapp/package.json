@@ -10,7 +10,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"calculateBmi": "tsc && npx tsx bmiCalculator.ts",
 		"calculateExercises": "tsc && npx tsx exerciseCalculator.ts",
-		"start": "node index.ts",
+		"start": "node --watch index.ts",
 		"dev": "concurrently \"tsc --watch\" \"node --watch index.ts\"",
 		"tsc": "tsc --noEmit",
 		"lint": "eslint ."
