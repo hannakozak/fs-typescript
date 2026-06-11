@@ -9,8 +9,8 @@ const getEntries = (): Omit<Patient, 'ssn'>[] => {
 const addEntry = (entry: NewPatientType): Patient => {
 	const newEntry: Patient = {
 		id: uuid(),
-		entries: [],
 		...entry,
+		entries: [],
 	};
 	patientsData.push(newEntry);
 	return newEntry;
