@@ -32,7 +32,21 @@ const PatientPage = () => {
 			{patient.entries.length === 0 ? (
 				<p>No entries yet</p>
 			) : (
-				patient.entries.map((_entry, index) => <div key={index}>Entry</div>)
+				patient.entries.map((entry) => (
+					<div key={entry.id}>
+						<p>
+							<strong>{entry.date}</strong> {entry.description}
+						</p>
+
+						{entry.diagnosisCodes && (
+							<ul>
+								{entry.diagnosisCodes.map((code) => (
+									<li key={code}>{code}</li>
+								))}
+							</ul>
+						)}
+					</div>
+				))
 			)}
 		</div>
 	);
