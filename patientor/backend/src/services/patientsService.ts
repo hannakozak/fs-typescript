@@ -1,21 +1,22 @@
-import patientsDataJson from '../data/patients.ts';
-import { NewPatientType } from '../types.ts';
-import { PatientType } from '../types.ts';
+import patientsData from '../data/patients.ts';
+import { NewPatientType, Patient } from '../types.ts';
 import { v1 as uuid } from 'uuid';
 
-const patientsData: PatientType[] = patientsDataJson as PatientType[];
-
-const getEntries = (): Omit<PatientType, 'ssn'>[] => {
+const getEntries = (): Omit<Patient, 'ssn'>[] => {
 	return patientsData.map(({ ssn: _ssn, ...rest }) => rest);
 };
 
-const addEntry = (entry: NewPatientType): PatientType => {
-	const newEntry: PatientType = {
-		id: uuid(), // also moved here — was being generated once at module load
+const addEntry = (entry: NewPatientType): Patient => {
+	const newEntry: Patient = {
+		id: uuid(),
+		entries: [],
 		...entry,
 	};
 	patientsData.push(newEntry);
 	return newEntry;
 };
 
-export default { getEntries, addEntry };
+const getPatientById = (id: string): Patient | undefined => {
+	return patientsData.find((patient) => patient.id === id);
+};
+export default { getEntries, addEntry, getPatientById };
