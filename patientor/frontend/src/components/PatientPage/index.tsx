@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import patientService from '../../services/patients';
 import { Diagnosis, Patient } from '../../types';
+import EntryDetails from './EntryDetails';
+import Box from '@mui/material/Box';
 
 interface PatientPageProps {
 	diagnoses: Diagnosis[];
@@ -37,7 +39,15 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
 				<p>No entries yet</p>
 			) : (
 				patient.entries.map((entry) => (
-					<div key={entry.id}>
+					<Box
+						key={entry.id}
+						sx={{
+							border: '1px solid black',
+							borderRadius: 1,
+							padding: 1,
+							marginBottom: 1,
+						}}
+					>
 						<p>
 							<strong>{entry.date}</strong> {entry.description}
 						</p>
@@ -55,7 +65,11 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
 								})}
 							</ul>
 						)}
-					</div>
+
+						<EntryDetails entry={entry} />
+
+						<p>Diagnosed by {entry.specialist}</p>
+					</Box>
 				))
 			)}
 		</div>
