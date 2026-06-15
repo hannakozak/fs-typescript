@@ -18,6 +18,8 @@ app.use('/api/patients', patientsRouter);
 
 app.use('/api/patients/:id', patientsRouter);
 
+app.use('/api/patients/:id/entries', patientsRouter);
+
 app.use('/api/diagnoses', diagnosesRouter);
 
 app.use('/api/patients/new', patientsRouter);

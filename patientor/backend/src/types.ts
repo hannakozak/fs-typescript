@@ -56,6 +56,51 @@ export type Entry =
 	| OccupationalHealthcareEntry
 	| HealthCheckEntry;
 
+export type NewEntry = Omit<Entry, 'id'>;
+
+export type NewPatientEntry =
+	| Omit<HospitalEntry, 'id'>
+	| Omit<OccupationalHealthcareEntry, 'id'>
+	| Omit<HealthCheckEntry, 'id'>;
+
+const BaseEntrySchema = z.object({
+	description: z.string(),
+	date: z.string(),
+	specialist: z.string(),
+	diagnosisCodes: z.array(z.string()).optional(),
+});
+
+export const EntrySchema = z.discriminatedUnion('type', [
+	BaseEntrySchema.extend({
+		type: z.literal('HealthCheck'),
+		healthCheckRating: z.union([
+			z.literal(HealthCheckRating.Healthy),
+			z.literal(HealthCheckRating.LowRisk),
+			z.literal(HealthCheckRating.HighRisk),
+			z.literal(HealthCheckRating.CriticalRisk),
+		]),
+	}),
+
+	BaseEntrySchema.extend({
+		type: z.literal('Hospital'),
+		discharge: z.object({
+			date: z.string(),
+			criteria: z.string(),
+		}),
+	}),
+
+	BaseEntrySchema.extend({
+		type: z.literal('OccupationalHealthcare'),
+		employerName: z.string(),
+		sickLeave: z
+			.object({
+				startDate: z.string(),
+				endDate: z.string(),
+			})
+			.optional(),
+	}),
+]);
+
 export const NewPatientSchema = z.object({
 	name: z.string(),
 	dateOfBirth: z.string(),
@@ -78,4 +123,3 @@ export interface Patient {
 }
 
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
-export type NewEntry = Omit<Entry, 'id'>;
