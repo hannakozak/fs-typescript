@@ -2,7 +2,11 @@ name: Health app E2E Tests
 
 on:
   push:
-    branches: [xmain, xmaster]
+    branches: [main, master]
+
+concurrency:
+  group: healthapp-tests
+  cancel-in-progress: false
 
 jobs:
   test:

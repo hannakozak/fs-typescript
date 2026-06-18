@@ -2,7 +2,11 @@ name: Patientor API Tests
 
 on:
   push:
-    branches: [xmain, xmaster]
+    branches: [main, master]
+
+concurrency:
+  group: patientor-tests
+  cancel-in-progress: false
 
 jobs:
   test:

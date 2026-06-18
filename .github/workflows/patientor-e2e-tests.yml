@@ -4,6 +4,10 @@ on:
   push:
     branches: [main, master]
 
+concurrency:
+  group: patientor-tests
+  cancel-in-progress: false
+
 jobs:
   test:
     runs-on: ubuntu-latest
