@@ -5,7 +5,7 @@ import { Diagnosis, Patient } from '../../types';
 import EntryDetails from './EntryDetails';
 import Box from '@mui/material/Box';
 import axios from 'axios';
-import AddHealthCheckEntryForm from '../AddHealthCheckEntryForm';
+import AddEntryForm from '../AddEntryForm';
 import { EntryWithoutId } from '../../types';
 import Button from '@mui/material/Button';
 
@@ -97,7 +97,7 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
 				))
 			)}
 			{entryFormVisible ? (
-				<AddHealthCheckEntryForm
+				<AddEntryForm
 					onSubmit={submitNewEntry}
 					onCancel={() => setEntryFormVisible(false)}
 					error={error}
