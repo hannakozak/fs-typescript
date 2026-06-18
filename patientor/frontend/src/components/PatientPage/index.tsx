@@ -4,6 +4,10 @@ import patientService from '../../services/patients';
 import { Diagnosis, Patient } from '../../types';
 import EntryDetails from './EntryDetails';
 import Box from '@mui/material/Box';
+import axios from 'axios';
+import AddHealthCheckEntryForm from '../AddHealthCheckEntryForm';
+import { EntryWithoutId } from '../../types';
+import Button from '@mui/material/Button';
 
 interface PatientPageProps {
 	diagnoses: Diagnosis[];
@@ -12,6 +16,8 @@ interface PatientPageProps {
 const PatientPage = ({ diagnoses }: PatientPageProps) => {
 	const [patient, setPatient] = useState<Patient | null>(null);
 	const { id } = useParams<{ id: string }>();
+	const [error, setError] = useState<string>();
+	const [entryFormVisible, setEntryFormVisible] = useState(false);
 
 	useEffect(() => {
 		if (!id) return;
@@ -24,6 +30,24 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
 	if (!patient) {
 		return <div>Loading...</div>;
 	}
+
+	const submitNewEntry = async (entry: EntryWithoutId) => {
+		try {
+			const updatedPatient = await patientService.addPatientEntry(
+				patient.id,
+				entry
+			);
+			setPatient(updatedPatient);
+			setEntryFormVisible(false);
+			setError(undefined);
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				setError(error.response?.data?.error || 'Something went wrong');
+			} else {
+				setError('Something went wrong');
+			}
+		}
+	};
 
 	return (
 		<div>
@@ -71,6 +95,17 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
 						<p>Diagnosed by {entry.specialist}</p>
 					</Box>
 				))
+			)}
+			{entryFormVisible ? (
+				<AddHealthCheckEntryForm
+					onSubmit={submitNewEntry}
+					onCancel={() => setEntryFormVisible(false)}
+					error={error}
+				/>
+			) : (
+				<Button variant="contained" onClick={() => setEntryFormVisible(true)}>
+					Add new entry
+				</Button>
 			)}
 		</div>
 	);
