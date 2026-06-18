@@ -101,6 +101,7 @@ const PatientPage = ({ diagnoses }: PatientPageProps) => {
 					onSubmit={submitNewEntry}
 					onCancel={() => setEntryFormVisible(false)}
 					error={error}
+					diagnoses={Object.values(diagnoses)}
 				/>
 			) : (
 				<Button variant="contained" onClick={() => setEntryFormVisible(true)}>

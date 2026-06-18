@@ -1,44 +1,43 @@
 import { useState } from 'react';
 import {
-	Button,
-	TextField,
 	Alert,
-	MenuItem,
-	Select,
+	Button,
+	FormControl,
 	InputLabel,
+	MenuItem,
+	OutlinedInput,
+	Select,
+	TextField,
 } from '@mui/material';
-import { EntryWithoutId, HealthCheckRating } from '../types';
+import { Diagnosis, EntryWithoutId, HealthCheckRating } from '../types';
 
 interface Props {
 	onSubmit: (entry: EntryWithoutId) => void;
 	onCancel: () => void;
 	error?: string;
+	diagnoses: Diagnosis[];
 }
 
 type EntryType = 'HealthCheck' | 'OccupationalHealthcare' | 'Hospital';
 
-const AddEntryForm = ({ onSubmit, onCancel, error }: Props) => {
+const AddEntryForm = ({ onSubmit, onCancel, error, diagnoses }: Props) => {
 	const [type, setType] = useState<EntryType>('HealthCheck');
 	const [date, setDate] = useState('');
 	const [description, setDescription] = useState('');
 	const [specialist, setSpecialist] = useState('');
-	const [diagnosisCodes, setDiagnosisCodes] = useState('');
-
-	const [healthCheckRating, setHealthCheckRating] = useState('');
+	const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
 	const [employerName, setEmployerName] = useState('');
 	const [sickLeaveStartDate, setSickLeaveStartDate] = useState('');
 	const [sickLeaveEndDate, setSickLeaveEndDate] = useState('');
 	const [dischargeDate, setDischargeDate] = useState('');
 	const [dischargeCriteria, setDischargeCriteria] = useState('');
+	const [healthCheckRating, setHealthCheckRating] = useState('0');
 
 	const baseEntry = {
 		date,
 		description,
 		specialist,
-		diagnosisCodes: diagnosisCodes
-			.split(',')
-			.map((code) => code.trim())
-			.filter(Boolean),
+		diagnosisCodes,
 	};
 
 	const submit = (event: React.SyntheticEvent) => {
@@ -103,9 +102,11 @@ const AddEntryForm = ({ onSubmit, onCancel, error }: Props) => {
 
 				<TextField
 					label="Date"
+					type="date"
 					fullWidth
 					value={date}
 					onChange={({ target }) => setDate(target.value)}
+					InputLabelProps={{ shrink: true }}
 				/>
 				<TextField
 					label="Description"
@@ -119,20 +120,38 @@ const AddEntryForm = ({ onSubmit, onCancel, error }: Props) => {
 					value={specialist}
 					onChange={({ target }) => setSpecialist(target.value)}
 				/>
-				<TextField
-					label="Diagnosis Codes comma-separated"
-					fullWidth
-					value={diagnosisCodes}
-					onChange={({ target }) => setDiagnosisCodes(target.value)}
-				/>
+				<FormControl fullWidth>
+					<InputLabel>Diagnosis codes</InputLabel>
+					<Select
+						multiple
+						value={diagnosisCodes}
+						onChange={(event) =>
+							setDiagnosisCodes(event.target.value as string[])
+						}
+						input={<OutlinedInput label="Diagnosis codes" />}
+					>
+						{diagnoses.map((diagnosis) => (
+							<MenuItem key={diagnosis.code} value={diagnosis.code}>
+								{diagnosis.code} — {diagnosis.name}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
 
 				{type === 'HealthCheck' && (
-					<TextField
-						label="Health Check Rating (0-3)"
-						fullWidth
-						value={healthCheckRating}
-						onChange={({ target }) => setHealthCheckRating(target.value)}
-					/>
+					<FormControl fullWidth>
+						<InputLabel>Health Check Rating</InputLabel>
+						<Select
+							value={healthCheckRating}
+							label="Health Check Rating"
+							onChange={({ target }) => setHealthCheckRating(target.value)}
+						>
+							<MenuItem value="0">0 — Healthy</MenuItem>
+							<MenuItem value="1">1 — Low Risk</MenuItem>
+							<MenuItem value="2">2 — High Risk</MenuItem>
+							<MenuItem value="3">3 — Critical Risk</MenuItem>
+						</Select>
+					</FormControl>
 				)}
 
 				{type === 'OccupationalHealthcare' && (
