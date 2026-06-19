@@ -42,7 +42,7 @@ jobs:
 
       - name: Install Playwright browsers
         working-directory: ./patientor-api-tests
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
       - name: Run API tests
         working-directory: ./patientor-api-tests
