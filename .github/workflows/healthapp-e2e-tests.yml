@@ -2,11 +2,7 @@ name: Health app E2E Tests
 
 on:
   push:
-    branches: [main, master]
-
-concurrency:
-  group: healthapp-tests
-  cancel-in-progress: false
+    branches: [xmain, xmaster]
 
 jobs:
   test:
@@ -42,7 +38,7 @@ jobs:
 
       - name: Install Playwright browsers
         working-directory: ./healthapp-tests
-        run: npx playwright install chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run e2e tests
         working-directory: ./healthapp-tests
